@@ -1,0 +1,7 @@
+*.env
+.vscode
+/env
+db.sqlite3
+__pyache__
+*.pyc
+.coverage
