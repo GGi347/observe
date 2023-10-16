@@ -76,3 +76,26 @@ button:focus-visible {
 .unclickable {
   background-color: #e6a13b;
 }
+
+.habit-info {
+  padding: 4px 8px;
+  border-color: var(--table-border-color);
+  color: black;
+}
+
+.habit-container {
+  width: 10%;
+  text-transform: capitalize;
+}
+
+.habit-days {
+  color: var(primary-grey-900);
+}
+
+.curr-date {
+  border: 1.2px solid var(--color-grey-600);
+}
+
+.curr-date-header {
+  background-color: var(--table-border-color);
+}

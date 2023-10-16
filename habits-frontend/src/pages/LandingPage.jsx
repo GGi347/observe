@@ -3,6 +3,9 @@ import img1 from "../images/observe1.png";
 import styled from "styled-components";
 import HeadingStyle from "../ui/HeadingStyle";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsFirstUpdate } from "../features/habits/userSlice";
 
 const Feature = styled.section`
   display: flex;
@@ -19,7 +22,7 @@ const FeatureRow = styled.li`
   align-items: center;
   gap: 20px;
   width: 100%;
-  background-color: blue;
+  background-color: var(--primary-color);
   padding: 60px 10%;
   background-color: ${(props) =>
     props.type === "odd" ? "var(--color-grey-100)" : "var(--color-grey-50)"};
@@ -43,13 +46,26 @@ const LandingHeader = styled.section`
 `;
 function LandingPage() {
   const navigate = useNavigate();
+  const tokens = useSelector((store) => store.user.tokens);
+  const dispatch = useDispatch();
+
+  useEffect(
+    function () {
+      if (tokens) {
+        console.log("TOKENS", tokens);
+
+        navigate("home");
+      }
+    },
+    [tokens, navigate, dispatch]
+  );
   return (
     <>
       <LandingHeader>
         <HeadingStyle>
           The journey of a thousand miles begins with a single step.
         </HeadingStyle>
-        <LargeButton onClick={() => navigate("home")}>
+        <LargeButton onClick={() => navigate("/login")}>
           Take the Step
         </LargeButton>
       </LandingHeader>

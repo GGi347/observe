@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
+  isCurrDate: false,
 };
 
 const CalendarSlice = createSlice({
@@ -27,9 +28,24 @@ const CalendarSlice = createSlice({
       }
       console.log("Decrease month", state.month);
     },
+    // setIsCurrDate(state, action) {
+    //   const date = new Date();
+
+    //   if (
+    //     state.month === date.getMonth() &&
+    //     state.year === date.getFullYear() &&
+    //     action.payload + 1 === date.getDate()
+    //   ) {
+    //     state.isCurrDate = true;
+    //   } else {
+    //     state.isCurrDate = false;
+    //   }
+    //   console.log("callled", state.isCurrDate, action.payload);
+    // },
   },
 });
 
-export const { increaseMonth, decreaseMonth } = CalendarSlice.actions;
+export const { increaseMonth, decreaseMonth, setIsCurrDate } =
+  CalendarSlice.actions;
 
 export default CalendarSlice.reducer;

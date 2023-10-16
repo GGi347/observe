@@ -1,32 +1,47 @@
 import { API_URL } from "../constants/index";
 import axios from "axios";
 import { getToken } from "./authToken";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addHabitDetails } from "../features/habits/habitSlice";
-
-const token = getToken();
+import useGetAuthToken from "../hooks/useGetAuthToken";
 
 const headers = {
   "Content-Type": "application/json",
-  Authorization: "Token " + token + "",
-};
-export const getHabitList = async () => {
-  console.log("TOken", token);
-  const response = await axios.get(API_URL, {
-    headers: headers,
-  });
-  console.log("habits", response.data.habits);
-  return response.data.habits;
+  Authorization: "Token " + +"",
 };
 
-export async function deleteHabits(habitName) {
+export const getHabitList = async ({ token, userId }) => {
+  console.log("Tokena nd iD", token, userId);
+  const response = await axios.get(API_URL, {
+    params: { userId: userId },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(token),
+    },
+  });
+
+  console.log("Res", response);
+
+  if (response.status === 202) {
+    return response.data.habits;
+  } else {
+    return [];
+  }
+};
+
+export async function deleteHabits(token, habitName) {
   axios
     .post(
       "http://127.0.0.1:8000/delete_habit/",
       {
         name: habitName,
       },
-      { headers: headers }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
     )
     .then(function (response) {
       console.log("delete", response);
@@ -36,7 +51,7 @@ export async function deleteHabits(habitName) {
     });
 }
 
-export async function createHabit(habit) {
+export async function createHabit(token, habit) {
   console.log("Habit API", habit);
   axios
     .post(
@@ -46,7 +61,12 @@ export async function createHabit(habit) {
         duration: habit.duration,
         goal_per_month: habit.goal,
       },
-      { headers: headers }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
     )
     .then(function (response) {
       console.log("response create", response);
@@ -56,15 +76,109 @@ export async function createHabit(habit) {
     });
 }
 
-export async function getHabitDetail(month) {
-  console.log("refetch getHabitDetailList");
-  const response = await axios.get("http://127.0.0.1:8000/habit_detail/", {
-    params: { month: month },
+export async function addHabitAchievement(token, habit) {
+  console.log("Habit API", habit);
+  axios
+    .post(
+      "http://127.0.0.1:8000/habit_achievement/",
+      {
+        habit: habit.habit,
+        year: habit.year,
+        month: habit.month,
+        achieved: habit.achieved,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
+    )
+    .then(function (response) {
+      console.log("response create in habitA", response);
+    })
+    .catch(function (err) {
+      console.log("error in adding habitA", err.message);
+    });
+}
 
-    headers: headers,
+export async function getHabitAchievementApi({ month, year, habit, token }) {
+  const response = await axios.get("http://127.0.0.1:8000/habit_achievement/", {
+    params: { month: month, year: year, habit: habit },
+
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(token),
+    },
   });
-  console.log("habit detail get", response.data.habitDetails, response.data);
-  return response.data.habitDetails;
+  if (response.status === 200) {
+    return response.data.habitAchievement.achieved;
+  } else {
+    return 0;
+  }
+}
+
+export async function getHabitDetail({ month, habit, token }) {
+  const response = await axios.get("http://127.0.0.1:8000/habit_detail/", {
+    params: { month: month, habit: habit },
+
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(token),
+    },
+  });
+
+  console.log(response, "in 1st");
+
+  if (response.status === 202) {
+    return response.data.habitDetails;
+  }
+  return [];
+}
+
+export async function getHabitDetailByYear({ year, habit, token }) {
+  const response = await axios.get(
+    "http://127.0.0.1:8000/habit_detail_by_year/",
+    {
+      params: { year: year, habit: habit },
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(token),
+      },
+    }
+  );
+
+  console.log(response, "in Year");
+
+  if (response.status === 202) {
+    return response.data.habitDetails;
+  }
+  return [];
+}
+
+export async function getAllHabitDetailByYear({ year, habits, token }) {
+  console.log("ENTERS API", year, habits);
+  const allHabits = [];
+  for (let habit of habits) {
+    const response = await axios.get(
+      "http://127.0.0.1:8000/habit_detail_by_year/",
+      {
+        params: { year: year, habit: habit.id },
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
+    );
+
+    if (response.status === 202) {
+      allHabits.push(response.data.habitDetails);
+    }
+  }
+
+  return allHabits;
 }
 
 export async function editHabitCompletion(habit, day, completed) {
@@ -83,7 +197,7 @@ export async function editHabitCompletion(habit, day, completed) {
     });
 }
 
-export async function createHabitCompletion(data) {
+export async function createHabitCompletion(token, data) {
   //const dayz = data.day.toISOString().split("T")[0];
   axios
     .post(
@@ -93,7 +207,12 @@ export async function createHabitCompletion(data) {
         date_today: data.date,
         completed: true,
       },
-      { headers: headers }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
     )
     .then(function (response) {
       const data = response.data;
@@ -104,7 +223,7 @@ export async function createHabitCompletion(data) {
     });
 }
 
-export async function deleteHabitCompleted(data) {
+export async function deleteHabitCompleted(token, data) {
   axios
     .post(
       "http://127.0.0.1:8000/delete_habit_detail/",
@@ -112,7 +231,12 @@ export async function deleteHabitCompleted(data) {
         habit: data.habit,
         date_today: data.date,
       },
-      { headers: headers }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(token),
+        },
+      }
     )
     .then(function (response) {
       const data = response.data;

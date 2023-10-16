@@ -4,30 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addHabitDetails } from "../features/habits/habitSlice";
 import toast from "react-hot-toast";
 import CreateHabitForm from "../ui/CreateHabitForm";
+import useGetAuthToken from "./useGetAuthToken";
 
-export function useGetHabitDetail() {
-  const dispatch = useDispatch();
+export function useGetHabitDetail({ habit }) {
+  //const dispatch = useDispatch();
   const month = useSelector((store) => store.calendar.month);
+  const token = useGetAuthToken();
 
-  const habitDetailsQuery = useQuery({
-    queryKey: ["habitDetails", month],
+  const { data: habitDetails, isLoading: isFetchingDetail } = useQuery({
+    queryKey: ["habitDetails", month, token, habit],
     queryFn: async () => {
-      console.log("MONTH", month);
-      return await getHabitDetailApi(month);
+      return await getHabitDetailApi({ month, habit, token });
     },
-
-    //onSuccess: (data) => dispatch(addHabitDetails(data)),
-
-    // onError: (err) => toast.error("Error getting data details", err.message),
   });
-
-  // if (habitDetailsQuery.data !== undefined) {
-  //   console.log("not undefined", habitDetailsQuery.fetchStatus);
-  //   dispatch(addHabitDetails(habitDetailsQuery.data));
-  // }
-  // if (habitDetailsQuery.isFetched) {
-  //dispatch(addHabitDetails(habitDetailsQuery.data));
-  // }
-
-  return { habitDetailsQuery };
+  return { habitDetails, isFetchingDetail };
 }

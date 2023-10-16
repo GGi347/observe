@@ -1,31 +1,68 @@
 import axios from "axios";
 import { storeToken } from "./authToken";
+import jwtDecode from "jwt-decode";
+import {
+  authenticateUser,
+  loginUser,
+  logoutUser,
+  setIsFirstUpdate,
+} from "../features/habits/userSlice";
+import toast from "react-hot-toast";
 
-export async function login({ email, password }) {
+export async function login({ username, password, dispatch }) {
   axios
-    .post("http://127.0.0.1:8000/users/login/", {
-      email: email,
+    .post("http://127.0.0.1:8000/users/signin/", {
+      username: username,
       password: password,
     })
     .then(function (response) {
-      storeToken(response.data.key);
+      const tokens = response.data;
+      const data = jwtDecode(tokens.access);
+      localStorage.setItem("authTokens", JSON.stringify(tokens));
+      dispatch(loginUser(data));
+      dispatch(authenticateUser(tokens));
     })
     .catch(function (error) {
-      throw new Error(error.message);
+      toast.error("Error in login. Try again.", error.message);
     });
 }
 
-export async function signup({ email, username, password }) {
+export async function updateToken({ token, dispatch }) {
   axios
-    .post("http://127.0.0.1:8000/users/signup/", {
-      username: username,
-      email: email,
-      password: password,
+    .post("http://127.0.0.1:8000/users/token/refresh/", {
+      refresh: token,
     })
     .then(function (response) {
+      //storeToken(response.data.key);
+      const tokens = response.data;
+      const data = jwtDecode(tokens?.access);
+      localStorage.setItem("authTokens", JSON.stringify(tokens));
+      dispatch(loginUser(data));
+      dispatch(authenticateUser(tokens));
+      console.log("user logged in", data);
+    })
+    .catch(function () {
+      toast.error("Something went wrong.");
+      // useLogout();
+    });
+  dispatch(setIsFirstUpdate(false));
+}
+
+export async function signup(data) {
+  axios
+    .post("http://127.0.0.1:8000/users/register/", {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      first_name: data.firstName,
+      last_name: data.lastName,
+    })
+    .then(function (response) {
+      console.log("REGISTER", response);
       storeToken(response.data.key);
     })
     .catch(function (error) {
+      console.log("REGISTER", error);
       throw new Error(error.message);
     });
 }

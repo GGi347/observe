@@ -17,11 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from habits import views
+from rest_framework_simplejwt import views as jwt_views 
 
 
 urlpatterns = [path('admin/', admin.site.urls),
 path('',include('habits.urls')),
-path('users/',include('users.urls')),
+path('users/token',jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
+
+path('users/', include('users.urls'))
+         
 ]
 
 

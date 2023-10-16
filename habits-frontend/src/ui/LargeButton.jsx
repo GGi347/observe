@@ -11,11 +11,15 @@ const LargeButtonStyled = styled.button`
   margin-top: 32px;
   padding-left: 20px;
   padding-right: 20px;
+  &:hover {
+    background-color: var(--primary-color);
+    color: white;
+  }
 `;
 
 // eslint-disable-next-line react/prop-types
-function LargeButton({ children }) {
-  return <LargeButtonStyled>{children}</LargeButtonStyled>;
+function LargeButton({ children, onClick }) {
+  return <LargeButtonStyled onClick={onClick}>{children}</LargeButtonStyled>;
 }
 
 export default LargeButton;

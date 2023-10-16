@@ -6,6 +6,7 @@ class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         fields = ['id', 'name', 'duration', 'goal_per_month', 'created_at']
+        read_only_fields = ['created_by']
 
 class HabitCompletionSerializer(serializers.ModelSerializer):
     # habit = serializers.ReadOnlyField(source='habit.id')
@@ -13,7 +14,7 @@ class HabitCompletionSerializer(serializers.ModelSerializer):
         model = HabitCompletion
         fields = ['habit', 'date_today', 'completed', 'duration']
 
-class HabitAchievement(serializers.ModelSerializer):
+class HabitAchievementSerializer(serializers.ModelSerializer):
     class Meta:
         model = HabitAchievement
         fields = ['habit', 'month', 'year', 'achieved']

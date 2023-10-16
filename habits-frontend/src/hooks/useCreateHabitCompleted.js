@@ -2,11 +2,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createHabitCompletion } from "../services/habits";
 import toast from "react-hot-toast";
 import { addHabitDetails } from "../features/habits/habitSlice";
+import useGetAuthToken from "./useGetAuthToken";
+import { useSelector } from "react-redux";
 
 function useCreateHabitCompleted() {
   const queryClient = useQueryClient();
+  const token = useGetAuthToken();
+  const month = useSelector((store) => store.calendar.month);
   const postq = useMutation({
-    mutationFn: createHabitCompletion,
+    mutationFn: (data) => createHabitCompletion(token, data),
     onSuccess: (data, variable) => {
       toast.success("Habit Created", data);
       // queryClient.setQueryData(["habitDetails", 9], (oldData) => {
@@ -14,8 +18,7 @@ function useCreateHabitCompleted() {
       //   return oldData;
       // });
       // queryClient.invalidateQueries({
-      //   queryKey: ["habitDetails", 9],
-      //   exact: true,
+      //   queryKey: ["habitDetails", month, token],
       // });
       console.log("CREATE", data);
     },

@@ -1,9 +1,10 @@
 import SignupForm from "../features/authentication/SignupForm";
+import HeadingStyle from "../ui/HeadingStyle";
 
 function SignupPage() {
   return (
     <>
-      <h4>Create new account</h4>
+      <HeadingStyle>Create new account</HeadingStyle>
       <SignupForm />
     </>
   );

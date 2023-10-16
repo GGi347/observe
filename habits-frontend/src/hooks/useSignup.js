@@ -7,10 +7,9 @@ export function useSignup() {
   const navigate = useNavigate();
 
   const { mutate: signup, isLoading } = useMutation({
-    mutationFn: ({ email, username, password }) =>
-      signupApi({ email, username, password }),
+    mutationFn: (data) => signupApi(data),
     onSuccess: () => {
-      navigate("login", { replace: true });
+      // navigate("login", { replace: true });
     },
     onError: (err) => toast.error(err.message),
   });

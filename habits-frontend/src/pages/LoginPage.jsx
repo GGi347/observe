@@ -1,9 +1,10 @@
 import LoginForm from "../features/authentication/LoginForm";
+import HeadingStyle from "../ui/HeadingStyle";
 
 function LoginPage() {
   return (
     <>
-      <h3>Log in to your account</h3>
+      <HeadingStyle>Log in to your account</HeadingStyle>
       <LoginForm />
     </>
   );

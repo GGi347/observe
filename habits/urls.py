@@ -11,4 +11,6 @@ urlpatterns = [
     path('delete_habit/', views.delete_habit),
     path('habit_detail/', views.habit_detail),
     path('delete_habit_detail/', views.delete_habit_detail),
+    path('habit_achievement/', views.habit_achievement),
+    path('habit_detail_by_year/', views.habit_detail_by_year)
 ]

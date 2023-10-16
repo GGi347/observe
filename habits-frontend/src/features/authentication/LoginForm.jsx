@@ -1,34 +1,52 @@
 import { useState } from "react";
 import { useLogin } from "../../hooks/useLogin";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import styled from "styled-components";
+import toast from "react-hot-toast";
+import FormStyled from "../../ui/FormStyled";
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { login, isLoading } = useLogin();
+  const { login, isLoading, status } = useLogin();
 
   function handleSumbit(e) {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!username || !password) {
+      toast.error("Invalid Form. Fill Again");
+      setUsername("");
+      setPassword("");
+      return;
+    }
 
-    login({ email, password });
+    login({ username, password, dispatch });
+    if (status === "success") {
+      navigate("/home");
+    }
   }
 
   return (
-    <form onSubmit={handleSumbit}>
+    <FormStyled onSubmit={handleSumbit}>
       <div>
+        <label htmlFor="username">Username</label>
         <input
-          placeholder="Email"
-          id="email"
-          type="email"
-          value={email}
+          autoFocus
+          placeholder="Username"
+          id="username"
+          type="text"
+          value={username}
           autoComplete="username"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           disabled={isLoading}
         />
       </div>
 
       <div>
+        <label htmlFor="password">Password</label>
         <input
           placeholder="Password"
           id="password"
@@ -39,8 +57,8 @@ function LoginForm() {
           disabled={isLoading}
         />
       </div>
-      <button type="submit" />
-    </form>
+      <button type="submit">Login</button>
+    </FormStyled>
   );
 }
 

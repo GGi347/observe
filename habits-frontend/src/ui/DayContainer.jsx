@@ -9,23 +9,33 @@ import { useMemo } from "react";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import useDeleteHabitCompleted from "../hooks/useDeleteHabitCompleted";
 import toast from "react-hot-toast";
+import useGetAuthToken from "../hooks/useGetAuthToken";
+import { setIsCurrDate } from "../features/habits/calendarSlice";
 
-function DayContainer({ habit, day, date, setAchieved }) {
+function DayContainer({
+  habit,
+  day,
+  date,
+  setAchieved,
+  achieved,
+  habitDetails,
+}) {
   // const habitDetails = useSelector((store) => store.habits.habitDetails);
   const dispatch = useDispatch();
-  const { habitDetailsQuery } = useGetHabitDetail();
+  const token = useGetAuthToken();
+
   const { isCreating, createHabitCompleted } = useCreateHabitCompleted();
   const { isDeleting, deleteHabitCompleted, data } = useDeleteHabitCompleted();
 
   const month = useSelector((store) => store.calendar.month);
   const year = useSelector((store) => store.calendar.year);
+  const isCurrDate = useSelector((store) => store.calendar.isCurrDate);
 
   const [isClickable, setIsClickable] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
 
   const queryClient = useQueryClient();
-  const habitDetails = habitDetailsQuery.data;
 
   async function handleDayClick(day, habit) {
     if (!isClickable) return;
@@ -36,10 +46,7 @@ function DayContainer({ habit, day, date, setAchieved }) {
       setIsChecked(false);
       deleteHabitCompleted({ habit, date: d });
       setAchieved((achieved) => achieved - 1);
-      // queryClient.invalidateQueries({
-      //   queryKey: ["habitDetails", month],
-      // });
-      console.log("DATA", data);
+      // addAchievement({ habit, year, month, achieved });
       return;
     } else {
       setIsChecked(true);
@@ -49,9 +56,7 @@ function DayContainer({ habit, day, date, setAchieved }) {
         completed: completed,
       });
       setAchieved((achieved) => achieved + 1);
-      // queryClient.invalidateQueries({
-      //   queryKey: ["habitDetails", month],
-      // });
+      // addAchievement({ habit, year, month, achieved });
     }
   }
   useEffect(
@@ -93,15 +98,39 @@ function DayContainer({ habit, day, date, setAchieved }) {
         }
       }
     },
-    [day, month, year, habitDetails, date]
+    [day, month, year, habitDetails, date, habit.id]
   );
+
+  // useEffect(
+  //   function () {
+  //     dispatch(setIsCurrDate(day));
+  //     console.log("currdata", isCurrDate, day);
+  //   },
+  //   [day, dispatch]
+  // );
 
   return (
     <td
       onClick={() => handleDayClick(day + 1, habit.id)}
-      className={isClickable ? "clickable" : "unclickable"}
+      className={`${isClickable ? "clickable" : "unclickable"} ${
+        isCurrDate ? "curr-date" : ""
+      }`}
     >
-      {isChecked && <span>X</span>}
+      {typeof habitDetails !== "undefined" &&
+        habitDetails.length !== 0 &&
+        isChecked && (
+          <span
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              color: "green",
+              fontWeight: "bold",
+              fontFamily: "sansSerif",
+            }}
+          >
+            ✔
+          </span>
+        )}
     </td>
   );
 }
