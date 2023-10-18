@@ -8,7 +8,9 @@ export function useGetHabits() {
   const dispatch = useDispatch();
   // const queryClient = new QueryClient();
   // queryClient.invalidateQueries("habits");
+
   const token = useGetAuthToken();
+  console.log("CALLED");
   const userId = useSelector((store) => store.user.userId);
   const {
     isLoading,
@@ -16,7 +18,7 @@ export function useGetHabits() {
     error,
   } = useQuery(["habits", token], async () => {
     const data = await getHabitList({ token, userId });
-
+    console.log("DATA in gethabits", token, userId);
     dispatch(receive(data));
     return data;
   });

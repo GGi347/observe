@@ -8,10 +8,11 @@ function PieGraph({ habit, currHabitTarget }) {
 
   const completed = habitDetails?.length;
 
-  const currPercentage = Math.round(percentage(completed, currHabitTarget));
+  let currPercentage = Math.round(percentage(completed, currHabitTarget));
+  currPercentage = currPercentage > 100 ? 100 : currPercentage;
 
   const singleData = {
-    labels: ["completed"].map((monthName) => monthName),
+    labels: ["Completed", "Target"].map((monthName) => monthName),
     datasets: [
       {
         data: [completed, currHabitTarget].map((data) => data),

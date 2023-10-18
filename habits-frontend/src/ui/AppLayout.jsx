@@ -3,6 +3,7 @@ import Header from "./Header";
 import styled from "styled-components";
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
+import Spinner from "./Spinner";
 
 const AppLayoutStyled = styled.div`
   display: grid;
@@ -25,15 +26,21 @@ const MainStyled = styled.main`
 `;
 
 function AppLayout() {
+  const isFirstUpdate = useSelector((store) => store.user.isFirstUpdate);
+  console.log("ISFIRSTUPDATE", isFirstUpdate);
   const isFormOpen = useSelector((store) => store.miscellaneous.isFormOpen);
   return (
     <AppLayoutStyled className={isFormOpen ? "inactive-bg" : "active-bg"}>
-      <Header />
-
-      <MainStyled className={isFormOpen ? "inactive-bg" : "active-bg"}>
-        <Outlet />
-      </MainStyled>
-
+      {isFirstUpdate ? (
+        <Spinner />
+      ) : (
+        <>
+          <Header />
+          <MainStyled className={isFormOpen ? "inactive-bg" : "active-bg"}>
+            <Outlet />
+          </MainStyled>
+        </>
+      )}
       <Footer />
     </AppLayoutStyled>
   );

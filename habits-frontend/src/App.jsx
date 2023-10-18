@@ -10,12 +10,11 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import { Toaster } from "react-hot-toast";
 import SignupPage from "./pages/SignupPage";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { updateToken } from "./services/apiAuth";
 import { useDispatch, useSelector } from "react-redux";
 import ChartsPage from "./pages/ChartsPage";
 import { setIsFirstUpdate } from "./features/habits/userSlice";
-import Spinner from "./ui/Spinner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,24 +26,28 @@ const queryClient = new QueryClient({
 
 function App() {
   const tokens = useSelector((store) => store.user.tokens);
-
   const dispatch = useDispatch();
   // dispatch(setIsFirstUpdate(true));
 
-  useEffect(() => {
-    let fourMinutes = 1000 * 60 * 9;
-    console.log("useDispatch");
-    let interval = setInterval(() => {
-      console.log("here");
-      if (tokens !== null) {
-        const token = tokens.refresh;
-        console.log("app", token);
-        updateToken({ token, dispatch });
-        console.log("called", tokens);
+  const fourMinutes = 1000 * 60 * 9;
+
+  useEffect(
+    function () {
+      function manageTokens() {
+        if (tokens !== null) {
+          const token = tokens.refresh;
+          updateToken({ token, dispatch });
+          dispatch(setIsFirstUpdate(false));
+        }
       }
-    }, fourMinutes);
-    return () => clearInterval(interval);
-  }, [dispatch, tokens]);
+      console.log("useDispatch");
+      manageTokens();
+      let interval = setInterval(manageTokens, fourMinutes);
+
+      return () => clearInterval(interval);
+    },
+    [fourMinutes, tokens, dispatch]
+  );
 
   return (
     <QueryClientProvider client={queryClient}>

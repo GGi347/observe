@@ -61,17 +61,15 @@ function CreateHabitForm({ setIsFormOpen, numOfDays }) {
 
     if (isValid) {
       const formattedDuration = getFormattedDuration();
-      console.log("FD", formattedDuration);
       createHabit({ habitName, duration: formattedDuration, goal });
       console.log({ habitName, duration: formattedDuration, goal });
-      setIsFormOpen(false);
+      //setIsFormOpen(false);
       dispatch(setIsFormOpen(false));
       //refetch();
     } else {
       setHabitName("");
       setGoal("");
       setDuration("");
-      // toast.error("Form is invalid.");
     }
   }
 

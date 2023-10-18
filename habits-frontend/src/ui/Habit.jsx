@@ -5,13 +5,15 @@ import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useGetHabitDetail } from "../hooks/useGetHabitDetail";
 import Spinner from "./Spinner";
+import CreateHabitForm from "./CreateHabitForm";
+import useEditHabit from "../hooks/useEditHabit";
 
 export default function Habit({ habit, days }) {
   const { isDeleting, deleteHabit } = useDeleteHabit();
-  const [isDeleteOn, setIsDeleteOn] = useState(false);
+  const { isEditing, editHabit } = useEditHabit();
+  const [isEditOn, setIsEditOn] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const month = useSelector((store) => store.calendar.month);
-  const year = useSelector((store) => store.calendar.year);
   const date = useMemo(() => new Date(), []);
   const { habitDetails, isFetchingDetail } = useGetHabitDetail({
     habit: habit.id,
@@ -27,21 +29,33 @@ export default function Habit({ habit, days }) {
     [habitDetails]
   );
 
-  console.log("Habit and acheived", habit, achieved);
-  function handleHabitClick() {
-    if (isDeleteOn) deleteHabit(habit.name);
+  function handleDeleteClick() {
+    if (isEditOn) deleteHabit(habit.name);
+  }
+
+  function handleEditClick() {
+    if (isEditOn)
+      //editHabit(habit.name);
+      setIsFormOpen(true);
   }
   return isFetchingDetail ? (
     <Spinner />
   ) : (
     <>
       <td
-        onMouseEnter={() => setIsDeleteOn(true)}
-        onMouseLeave={() => setIsDeleteOn(false)}
-        onClick={handleHabitClick}
+        onMouseEnter={() => setIsEditOn(true)}
+        onMouseLeave={() => setIsEditOn(false)}
+        // onClick={handleHabitClick}
         className="habit-info habit-container"
       >
-        {isDeleteOn ? <>🚮</> : habit.name}
+        {isEditOn ? (
+          <>
+            <span onClick={handleEditClick}>🖉</span>{" "}
+            <span onClick={handleDeleteClick}>🗑</span>
+          </>
+        ) : (
+          habit.name
+        )}
       </td>
       {days.map((d) => (
         <DayContainer
@@ -56,6 +70,10 @@ export default function Habit({ habit, days }) {
       ))}
       <td className="habit-info">{habit.goal_per_month}</td>
       <td className="habit-info">{achieved}</td>
+
+      {/* {isFormOpen && (
+        <CreateHabitForm setIsFormOpen={setIsFormOpen} numOfDays={days} />
+      )} */}
     </>
   );
 }

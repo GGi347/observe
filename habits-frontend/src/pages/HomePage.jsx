@@ -8,6 +8,7 @@ import useGetAuthToken from "../hooks/useGetAuthToken";
 import { setIsFormOpen } from "../features/habits/miscellaneousSlice";
 import MediumButton from "../ui/MediumButton";
 import Spinner from "../ui/Spinner";
+import { MONTH_NAMES } from "../constants";
 
 function HomePage() {
   const month = useSelector((store) => store.calendar.month);
@@ -19,22 +20,10 @@ function HomePage() {
   const isFirstUpdate = useSelector((store) => store.user.isFirstUpdate);
 
   const dispatch = useDispatch();
+
   const { isLoading, error } = useGetHabits({ token, userId });
 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  const monthNames = MONTH_NAMES;
   const fullMonth = monthNames[month];
 
   const queryClient = useQueryClient();
@@ -75,7 +64,7 @@ function HomePage() {
         </button>
       </h3>
       {isLoading ? (
-        <div>Loading</div>
+        <Spinner />
       ) : error ? (
         <div>{error}</div>
       ) : (

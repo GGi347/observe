@@ -10,23 +10,13 @@ function useCreateHabitCompleted() {
   const token = useGetAuthToken();
   const month = useSelector((store) => store.calendar.month);
   const postq = useMutation({
-    mutationFn: (data) => createHabitCompletion(token, data),
-    onSuccess: (data, variable) => {
+    mutationFn: async (data) => await createHabitCompletion(token, data),
+    onSuccess: (data) => {
       toast.success("Habit Created", data);
-      // queryClient.setQueryData(["habitDetails", 9], (oldData) => {
-      //   oldData = [...oldData, variable];
-      //   return oldData;
-      // });
-      // queryClient.invalidateQueries({
-      //   queryKey: ["habitDetails", month, token],
-      // });
-      console.log("CREATE", data);
     },
     onError: (err) => toast.error(err.message),
   });
-  if (postq.status === "success") {
-    console.log("success", postq.data);
-  }
+
   return { isCreating: false, createHabitCompleted: postq.mutate };
 }
 

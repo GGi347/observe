@@ -4,6 +4,7 @@ import { getToken } from "./authToken";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabitDetails } from "../features/habits/habitSlice";
 import useGetAuthToken from "../hooks/useGetAuthToken";
+import toast from "react-hot-toast";
 
 const headers = {
   "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export const getHabitList = async ({ token, userId }) => {
   if (response.status === 202) {
     return response.data.habits;
   } else {
-    return [];
+    throw new Error("error");
   }
 };
 
@@ -44,7 +45,7 @@ export async function deleteHabits(token, habitName) {
       }
     )
     .then(function (response) {
-      console.log("delete", response);
+      //toast.(habitName, "deleted");
     })
     .catch(function (err) {
       console.log("error", err.message);
@@ -128,7 +129,7 @@ export async function getHabitDetail({ month, habit, token }) {
     },
   });
 
-  console.log(response, "in 1st");
+  console.log(response, habit, "in 1st");
 
   if (response.status === 202) {
     return response.data.habitDetails;
@@ -181,7 +182,7 @@ export async function getAllHabitDetailByYear({ year, habits, token }) {
   return allHabits;
 }
 
-export async function editHabitCompletion(habit, day, completed) {
+export async function editHabit(habit, day, completed) {
   console.log("DAY", day);
   axios
     .put(
@@ -199,6 +200,7 @@ export async function editHabitCompletion(habit, day, completed) {
 
 export async function createHabitCompletion(token, data) {
   //const dayz = data.day.toISOString().split("T")[0];
+
   axios
     .post(
       "http://127.0.0.1:8000/habit_detail/",

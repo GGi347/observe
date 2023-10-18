@@ -27,25 +27,19 @@ export async function login({ username, password, dispatch }) {
     });
 }
 
-export async function updateToken({ token, dispatch }) {
+export async function updateToken({ token }) {
   axios
     .post("http://127.0.0.1:8000/users/token/refresh/", {
       refresh: token,
     })
     .then(function (response) {
-      //storeToken(response.data.key);
       const tokens = response.data;
-      const data = jwtDecode(tokens?.access);
       localStorage.setItem("authTokens", JSON.stringify(tokens));
-      dispatch(loginUser(data));
-      dispatch(authenticateUser(tokens));
-      console.log("user logged in", data);
     })
     .catch(function () {
       toast.error("Something went wrong.");
-      // useLogout();
+      return "data";
     });
-  dispatch(setIsFirstUpdate(false));
 }
 
 export async function signup(data) {

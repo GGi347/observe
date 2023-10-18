@@ -1,11 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { editHabitCompletion } from "../services/habits";
+import { editHabit } from "../services/habits";
 import toast from "react-hot-toast";
 
-function useEditHabitCompleted() {
+function useEditHabit() {
   const { mutate: editHabit, isLoading: isEditing } = useMutation({
-    mutationFn: (habit, day, completed) =>
-      editHabitCompletion(habit, day, completed),
+    mutationFn: (habit, day, completed) => editHabit(habit, day, completed),
     onSuccess: () => {
       toast.success("Habit edited");
       // queryClient.invalidateQueries({
@@ -18,4 +17,4 @@ function useEditHabitCompleted() {
   return { isEditing, editHabit };
 }
 
-export default useEditHabitCompleted;
+export default useEditHabit;

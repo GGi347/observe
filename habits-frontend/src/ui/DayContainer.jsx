@@ -41,21 +41,21 @@ function DayContainer({
     if (!isClickable) return;
     const completed = true;
     const d = dateToString(year, month, day);
-    console.log("ISCHECKEDINITIAL", isChecked);
-    if (isChecked) {
-      setIsChecked(false);
-      deleteHabitCompleted({ habit, date: d });
-      setAchieved((achieved) => achieved - 1);
+    if (!isChecked) {
+      setIsChecked((isChecked) => !isChecked);
+      createHabitCompleted({
+        habit,
+        date: d,
+        completed: completed,
+      });
+      setAchieved((achieved) => achieved + 1);
       return;
     }
-    setIsChecked(true);
-    console.log("ENTERS in is check", isChecked);
-    createHabitCompleted({
-      habit,
-      date: d,
-      completed: completed,
-    });
-    setAchieved((achieved) => achieved + 1);
+
+    setIsChecked(false);
+    deleteHabitCompleted({ habit, date: d });
+    setAchieved((achieved) => achieved - 1);
+
     // addAchievement({ habit, year, month, achieved });
 
     console.log("ISCHECKED", isChecked);
@@ -118,7 +118,7 @@ function DayContainer({
       }`}
     >
       {typeof habitDetails !== "undefined" &&
-        habitDetails.length !== 0 &&
+        // habitDetails.length !== 0 &&
         isChecked && (
           <span
             style={{
