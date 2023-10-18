@@ -31,18 +31,18 @@ const GlobalStyles = createGlobalStyle`
     @font-face {
         font-family: Roboto-Bold;
         src: url('../fonts/Roboto-Bold.ttf');
-    }
+    }*/
 
     @font-face {
-        font-family: Noto;
-        src: url('../fonts/NotoSans-Regular.ttf');
-    } */
+        font-family: Inter;
+        src: url('../fonts/Inter-Regular.ttf');
+    } 
 
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: Roboto-Regular Arial, Helvetica, sans-serif;
+        font-family: Inter, sans-serif;
         
     }
 

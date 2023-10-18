@@ -41,23 +41,24 @@ function DayContainer({
     if (!isClickable) return;
     const completed = true;
     const d = dateToString(year, month, day);
-
+    console.log("ISCHECKEDINITIAL", isChecked);
     if (isChecked) {
       setIsChecked(false);
       deleteHabitCompleted({ habit, date: d });
       setAchieved((achieved) => achieved - 1);
-      // addAchievement({ habit, year, month, achieved });
       return;
-    } else {
-      setIsChecked(true);
-      createHabitCompleted({
-        habit,
-        date: d,
-        completed: completed,
-      });
-      setAchieved((achieved) => achieved + 1);
-      // addAchievement({ habit, year, month, achieved });
     }
+    setIsChecked(true);
+    console.log("ENTERS in is check", isChecked);
+    createHabitCompleted({
+      habit,
+      date: d,
+      completed: completed,
+    });
+    setAchieved((achieved) => achieved + 1);
+    // addAchievement({ habit, year, month, achieved });
+
+    console.log("ISCHECKED", isChecked);
   }
   useEffect(
     function () {

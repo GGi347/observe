@@ -5,13 +5,14 @@ import { NavLink } from "react-router-dom";
 import Button from "./Button";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/habits/userSlice";
-import { useEffect, useState } from "react";
+import MediumButton from "./MediumButton";
 
 const HeaderStyle = styled.header`
   display: flex;
   justify-content: space-between;
-  margin: 2rem 4rem;
+  margin: 2rem;
   cursor: pointer;
+  background-color: var(---color-grey-50);
 `;
 const Nav = styled.ul`
   display: flex;
@@ -19,34 +20,38 @@ const Nav = styled.ul`
   font-size: 18px;
 
   .active {
-    border-bottom: 2px solid black;
+    color: var(---color-grey-900);
+  }
+
+  .hover {
+    color: var(---color-grey-800);
   }
 `;
 function Header() {
   const username = useSelector((store) => store.user.username);
-  console.log("Username in header", username);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const habits = useSelector((store) => store.habits.habits);
   return (
     <HeaderStyle>
       <HeadingStyle onClick={() => navigate("/")}>⌛ Observe</HeadingStyle>
-      <div>
+      <div style={{ color: "blue" }}>
         {username ? (
           <Nav>
-            <span style={{ textTransform: "capitalize" }}>{username}</span>
             <NavLink to="charts" state={{ habits: habits }}>
               Charts
             </NavLink>
-            <Button
+            <span
               onClick={() => {
                 localStorage.removeItem("authTokens");
                 dispatch(logoutUser());
                 navigate("/");
               }}
+              style={{ background: "var(---primary-color)" }}
             >
               Logout
-            </Button>
+            </span>
+            <span style={{ textTransform: "capitalize" }}>{username}</span>
           </Nav>
         ) : (
           <>

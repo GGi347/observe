@@ -1,18 +1,13 @@
-import { useState } from "react";
 import { useGetHabits } from "../hooks/useGetHabits";
 import { useDispatch, useSelector } from "react-redux";
 import CreateHabitForm from "../ui/CreateHabitForm";
-import { useGetHabitDetail } from "../hooks/useGetHabitDetail";
 import Calendar from "../ui/Calendar";
 import { decreaseMonth, increaseMonth } from "../features/habits/calendarSlice";
 import { useQueryClient } from "@tanstack/react-query";
 import useGetAuthToken from "../hooks/useGetAuthToken";
-import LargeButton from "../ui/LargeButton";
 import { setIsFormOpen } from "../features/habits/miscellaneousSlice";
 import MediumButton from "../ui/MediumButton";
-import { isAllOf } from "@reduxjs/toolkit";
 import Spinner from "../ui/Spinner";
-import useAddAchievement from "../hooks/useAddAchievement";
 
 function HomePage() {
   const month = useSelector((store) => store.calendar.month);
@@ -43,7 +38,6 @@ function HomePage() {
   const fullMonth = monthNames[month];
 
   const queryClient = useQueryClient();
-  console.log("isfirst", isFirstUpdate);
   return isLoading && isFirstUpdate ? (
     <Spinner />
   ) : (
@@ -90,14 +84,6 @@ function HomePage() {
       <MediumButton onClick={() => dispatch(setIsFormOpen(true))}>
         New Habit ➕
       </MediumButton>
-
-      {/* {!isFetchingDetail && habitDetails && (
-        <ul>
-          {habitDetails.map((habitDetail, i) => (
-            <li key={i}>{habitDetail.date_today}</li>
-          ))}
-        </ul>
-      )} */}
       {isFormOpen && (
         <CreateHabitForm setIsFormOpen={setIsFormOpen} numOfDays={numOfDays} />
       )}
