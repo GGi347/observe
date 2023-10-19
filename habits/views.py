@@ -24,7 +24,7 @@ def habit_list(request):
             serializer = HabitSerializer(habits, many=True)
             return JsonResponse({"habits" : serializer.data}, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response({"habits": []}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"habits": []}, status=status.HTTP_204_NO_CONTENT)
 
     if request.method == 'POST':
         

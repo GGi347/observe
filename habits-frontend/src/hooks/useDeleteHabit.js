@@ -11,15 +11,13 @@ export default function useDeleteHabit() {
     mutate: deleteHabit,
     error,
   } = useMutation({
-    mutationFn: (habitName) => deleteHabits(token, habitName),
+    mutationFn: (habitName) => deleteHabits(token, habitName, queryClient),
 
-    onSuccess: (variable) => {
+    onSuccess: () => {
       toast.success("Habit deleted");
-      queryClient.invalidateQueries({
-        queryKey: ["habits"],
-      });
     },
     onError: (err) => toast.error(err.message),
   });
+
   return { isDeleting, deleteHabit, error };
 }

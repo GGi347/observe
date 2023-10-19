@@ -22,10 +22,6 @@ export function useGetHabits() {
     dispatch(receive(data));
     return data;
   });
-  if (!isLoading) {
-    //console.log("useGetHabits ", habits);
-  }
-  //const habits = useSelector((store) => store.habits.habits);
 
   return { isLoading, habits, error, refetch: getHabitList };
 }

@@ -9,12 +9,9 @@ export function useCreateHabit() {
   const token = useGetAuthToken();
 
   const { mutate: createHabit, isLoading: isCreating } = useMutation({
-    mutationFn: (habit) => createHabitApi(token, habit),
+    mutationFn: (habit) => createHabitApi(token, habit, queryClient),
     onSuccess: () => {
       toast.success("Habit created successfully");
-      queryClient.invalidateQueries({
-        queryKey: ["habits"],
-      });
     },
     onError: (err) => toast.error(err.message),
   });

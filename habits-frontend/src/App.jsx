@@ -29,7 +29,7 @@ function App() {
   const dispatch = useDispatch();
   // dispatch(setIsFirstUpdate(true));
 
-  const fourMinutes = 1000 * 60 * 9;
+  const fourMinutes = 1000 * 60 * 19;
 
   useEffect(
     function () {

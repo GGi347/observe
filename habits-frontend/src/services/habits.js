@@ -25,12 +25,11 @@ export const getHabitList = async ({ token, userId }) => {
 
   if (response.status === 202) {
     return response.data.habits;
-  } else {
-    throw new Error("error");
   }
+  return [];
 };
 
-export async function deleteHabits(token, habitName) {
+export async function deleteHabits(token, habitName, queryClient) {
   axios
     .post(
       "http://127.0.0.1:8000/delete_habit/",
@@ -45,14 +44,17 @@ export async function deleteHabits(token, habitName) {
       }
     )
     .then(function (response) {
-      //toast.(habitName, "deleted");
+      console.log("DELETE IN APPI", response);
+      queryClient.invalidateQueries({
+        queryKey: ["habits"],
+      });
     })
     .catch(function (err) {
-      console.log("error", err.message);
+      toast.error("Error deleting habit.");
     });
 }
 
-export async function createHabit(token, habit) {
+export async function createHabit(token, habit, queryClient) {
   console.log("Habit API", habit);
   axios
     .post(
@@ -71,6 +73,9 @@ export async function createHabit(token, habit) {
     )
     .then(function (response) {
       console.log("response create", response);
+      queryClient.invalidateQueries({
+        queryKey: ["habits"],
+      });
     })
     .catch(function (err) {
       console.log("error", err.message);

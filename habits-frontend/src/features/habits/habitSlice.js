@@ -12,6 +12,7 @@ const HabitSlice = createSlice({
   reducers: {
     receive(state, action) {
       state.habits = action.payload;
+      console.log("REVCEVOE", state.habits);
     },
     add(state, action) {
       state.habits = [...state.habits, action.payload];

@@ -16,6 +16,7 @@ export async function login({ username, password, dispatch }) {
       password: password,
     })
     .then(function (response) {
+      console.log("RESPONSE login", response);
       const tokens = response.data;
       const data = jwtDecode(tokens.access);
       localStorage.setItem("authTokens", JSON.stringify(tokens));
@@ -38,7 +39,7 @@ export async function updateToken({ token }) {
     })
     .catch(function () {
       toast.error("Something went wrong.");
-      return "data";
+      return;
     });
 }
 

@@ -56,7 +56,9 @@ function Calendar({ numOfDays }) {
 
       <tbody>
         {habits.length === 0 ? (
-          <Spinner />
+          <tr>
+            <td>No habits found</td>
+          </tr>
         ) : (
           habits.map((habit, index) => {
             return (
