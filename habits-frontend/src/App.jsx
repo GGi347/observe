@@ -37,8 +37,8 @@ function App() {
         if (tokens !== null) {
           const token = tokens.refresh;
           updateToken({ token, dispatch });
-          dispatch(setIsFirstUpdate(false));
         }
+        dispatch(setIsFirstUpdate(false));
       }
       console.log("useDispatch");
       manageTokens();
